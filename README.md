@@ -1,25 +1,33 @@
 # lms-edu
 
 ## Project setup
+
+### Frontend
+1. **Install frontend dependencies**  
+   
 ```
 npm install
 ```
-
-### Compiles and hot-reloads for development
+2. **Run the frontend in development mode
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
+### Backend
 
-### Lints and fixes files
-```
-npm run lint
-```
+1. **Install Django and backend dependencies
+First, make sure to create a virtual environment if needed and activate it:
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-"# lms-Courses" 
+```
+python -m venv venv
+source venv/bin/activate   # On Windows, use `venv\Scripts\activate`
+
+```
+2. **Install Django and required libraries
+```
+pip install django djangorestframework django-cors-headers
+```
+3. **Run the backend server
+```
+python manage.py runserver
+```
