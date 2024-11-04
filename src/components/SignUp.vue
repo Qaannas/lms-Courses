@@ -1,80 +1,78 @@
 <template>
-<body >
-	
+<body>
 	<header class="header-area header-sticky">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <nav class="main-nav">
-                    <!-- ***** Logo Start ***** -->
-                    <a href="index.html" class="logo">
-                        <h1>Scholar</h1>
-                    </a>
-                    <!-- ***** Logo End ***** -->
-                    <!-- ***** Serach Start ***** -->
-                    <div class="search-input">
-                      <form id="search" action="#">
-                        <input class="search"  type="text" placeholder="Type Something" id='searchText' name="searchKeyword" onkeypress="handle" />
-                        <i class="fa fa-search"></i>
-                      </form>
-                    </div>
-                    <!-- ***** Serach Start ***** -->
-                    <!-- ***** Menu Start ***** -->
-                    <ul class="nav">
-                      <li class="scroll-to-section"><a href="/" class="active">Home</a></li>
-                      
-                      <li><a href="#contact" @click.prevent="redirectToSignup">Register Now!</a></li>
-                  </ul>   
-                    <a class='menu-trigger'>
-                        <span>Menu</span>
-                    </a>
-                    <!-- ***** Menu End ***** -->
-                </nav>
-            </div>
-        </div>
-    </div>
-  </header>
-<div class="main">
+	<div class="container">
+		<nav class="main-nav">
+		<a href="index.html" class="logo">
+			<h1>Scholar</h1>
+		</a>
+		<div class="search-input">
+			<form id="search" action="#">
+			<input
+				class="search"
+				type="text"
+				placeholder="Type Something"
+				id="searchText"
+				name="searchKeyword"
+			/>
+			<i class="fa fa-search"></i>
+			</form>
+		</div>
+		<ul class="nav">
+			<li class="scroll-to-section"><a href="/" class="active">Home</a></li>
+			<li><a href="#contact" @click.prevent="redirectToSignup">Register Now!</a></li>
+		</ul>
+		<a class="menu-trigger">
+			<span>Menu</span>
+		</a>
+		</nav>
+	</div>
+	</header>
+
+	<div class="main">
 	<input type="checkbox" id="chk" aria-hidden="true" />
 
 	<div class="signup">
-	<form @submit.prevent="register">
+		<form @submit.prevent="register">
 		<label for="chk" aria-hidden="true">Sign up</label>
-		<input v-model="form.name" type="text" name="txt" placeholder="Name" required />
-		<input v-model="form.email" type="email" id="email" placeholder="Email" required />
-		<input v-model="form.password" type="password" id="password" placeholder="Password" required />
-		<input v-model="form.password2" type="password" placeholder="Repeat Password" required />
+		<input v-model="registrationForm.name" type="text" name="txt" placeholder="Name" required />
+		<input v-model="registrationForm.email" type="email" id="email" placeholder="Email" required />
+		<input v-model="registrationForm.password" type="password" id="password" placeholder="Password" required />
+		<input v-model="registrationForm.password2" type="password" placeholder="Repeat Password" required />
 		<button type="submit">Sign up</button>
-	</form>
-	<p v-if="error">{{ error }}</p>
-	<p v-if="success">{{ success }}</p>
+		</form>
+		<p v-if="error">{{ error }}</p>
+		<p v-if="success">{{ success }}</p>
 	</div>
 
 	<div class="login">
-	<form @submit.prevent="login">
+		<form @submit.prevent="login">
 		<label for="chk" aria-hidden="true">Login</label>
-		<input v-model="form.name" id="name" type="text" placeholder="Name" required />
-		<input v-model="form.password" type="password" placeholder="Password" required />
+		<input v-model="loginForm.name" id="name" type="text" placeholder="Name" required />
+		<input v-model="loginForm.password" type="password" placeholder="Password" required />
 		<button type="submit">Login</button>
-	</form>
-	<p v-if="error" class="error">{{ error }}</p>
+		</form>
+		<p v-if="error" class="error">{{ error }}</p>
 	</div>
-</div>
-</body>	
+	</div>
+</body>
 </template>
   
- 
 <script>
 export default {
-	name: "SignUp",
+name: "SignUp",
 
 data() {
 	return {
-	form: {
+	registrationForm: {
 		name: '',
 		email: '',
 		password: '',
 		password2: '',
+	},
+	loginForm: {
+		name: '',
+		password: '',
 	},
 	error: '',
 	success: '',
@@ -82,64 +80,65 @@ data() {
 },
 methods: {
 	async register() {
-  if (this.form.password !== this.form.password2) {
-    this.error = "Passwords don't match";
-    return;
-  }
+	if (this.registrationForm.password !== this.registrationForm.password2) {
+		this.error = "Passwords don't match";
+		return;
+	}
 
-  try {
-    const response = await fetch('http://localhost:8000/api/register/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(this.form),
-    });
+	try {
+		const response = await fetch('http://localhost:8000/api/register/', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify(this.registrationForm),
+		});
 
-    if (response.ok) {
-      this.success = 'Registration successful';
-      this.error = '';
-    } else {
-      const data = await response.json();
-      this.error = data.error || 'Registration failed';
-    }
-  } catch (error) {
-    this.error = 'Error: ' + error;
-  }
+		if (response.ok) {
+		this.success = 'Registration successful. You can now log in.';
+		this.error = '';
+		// Optionally redirect to login page
+		// this.$router.push({ name: 'Login' });
+		} else {
+		const data = await response.json();
+		this.error = data.error || 'Registration failed';
+		}
+	} catch (error) {
+		this.error = 'Error: ' + error;
+	}
+	},
+
+	async login() {
+	this.error = '';
+	this.success = '';
+
+	try {
+		const response = await fetch('http://localhost:8000/api/login/', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify(this.loginForm),
+		});
+
+		const data = await response.json();
+		console.log('Login API Response:', data);
+
+		if (response.ok) {
+		localStorage.setItem('studentName', data.name);
+		localStorage.setItem('studentId', data.studentId); // Store the studentId
+		localStorage.setItem('token', data.token); // Store the authentication token
+		localStorage.setItem("enrolledCourses", JSON.stringify(data.enrolledCourses)); // Store enrolled courses
+		this.$router.push({ name: 'ProfileS' });
+		
+		} else {
+		this.error = data.error || 'Login failed.';
+		}
+	} catch (err) {
+		console.error('Login Request Failed:', err);
+		this.error = 'Error logging in. Please try again.';
+	}
+	},
 },
-async login() {
-  this.error = '';
-  this.success = '';
-
-  try {
-    const response = await fetch('http://localhost:8000/api/login/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: this.form.name,
-        password: this.form.password,
-      }),
-    });
-
-    const data = await response.json();
-    console.log('Login API Response:', data);
-
-    if (response.ok) {
-      localStorage.setItem('studentName', data.name);
-      localStorage.setItem('studentId', data.studentId); // Store the studentId
-      localStorage.setItem('token', data.token); // Store the authentication token
-      localStorage.setItem('enrolledCourses', JSON.stringify(data.enrolledCourses));
-      this.$router.push({ name: 'ProfileS' });
-    } else {
-      this.error = data.error || 'Login failed.';
-    }
-  } catch (err) {
-    console.error('Login Request Failed:', err);
-    this.error = 'Error logging in. Please try again.';
   }
-}
-
-},
-}
-</script>
+  </script>
+  
   
 
 
@@ -151,17 +150,20 @@ async login() {
 	margin-top: -1px;
 
 }
-body{
-	margin: 0;
-	padding: 0;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	min-height: 100vh;
-	font-family: 'Jost', sans-serif;
-	background: #7a6ad8;
-	
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  background: url('/public/back.png') no-repeat center center fixed;
+  background-size: cover;
+  position: relative;
 }
+
+
 .main{
 	width: 350px;
 	height: 500px;
@@ -181,7 +183,7 @@ body{
 }
 
 label{
-	color: #eee;
+	color: #fff;
 	font-size: 2.3em;
 	justify-content: center;
 	display: flex;
@@ -209,7 +211,7 @@ button{
 	justify-content: center;
 	display: block;
 	color: #fff;
-	background: #573b8a;
+	background: transparent;
 	font-size: 1em;
 	font-weight: bold;
 	margin-top: 30px;
@@ -224,13 +226,13 @@ button:hover{
 }
 .login{
 	height: 460px;
-	background: #eee;
+	background: #7a6ad8;
 	border-radius: 60% / 10%;
 	transform: translateY(-180px);
 	transition: .8s ease-in-out;
 }
 .login label{
-	color: #7a6ad8;
+	color: #fff;
 	transform: scale(.6);
 }
 
@@ -246,3 +248,4 @@ button:hover{
 
 
 </style>
+

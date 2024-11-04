@@ -26,6 +26,7 @@ class Enrollment(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     enrollment_date = models.DateTimeField(auto_now_add=True)
+    rating = models.PositiveIntegerField(null=True, blank=True)  # Add this line
 
     def __str__(self):
         return f"{self.student.name} enrolled in {self.course.title}"

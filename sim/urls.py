@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import RegisterStudent,LoginStudent,StudentListAPIView,CourseListAPIView,EnrollInCourse,EnrolledCoursesAPIView
+from .views import RegisterStudent,LoginStudent,StudentListAPIView,CourseListAPIView,EnrollInCourse,EnrolledCoursesAPIView,SubmitRatingView,UpdateEnrollmentRating
 
 urlpatterns = [
     path("register/", RegisterStudent.as_view(), name="register"),
@@ -12,4 +12,15 @@ urlpatterns = [
         EnrolledCoursesAPIView.as_view(),
         name="enrolled-courses",
     ),
+    path(
+        "enroll/<int:student_id>/<int:course_id>/",
+        SubmitRatingView.as_view(),
+        name="submit-rating",
+    ),
+    path(
+        "enroll/update-rating/",  # Add this path for updating ratings
+        UpdateEnrollmentRating.as_view(),
+        name="update-enrollment-rating",
+    ),
+    
 ]

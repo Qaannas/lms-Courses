@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Student,Course
+from .models import Student,Course,Enrollment
 from django.contrib.auth.hashers import make_password,check_password
 from rest_framework import serializers
 
@@ -50,3 +50,10 @@ class StudentSerializer(serializers.ModelSerializer):
         validated_data.pop("password2")
         validated_data["password"] = make_password(validated_data["password"])
         return super().create(validated_data)
+
+
+# serializers.py
+class EnrollmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Enrollment
+        fields = ["id", "student", "course", "enrollment_date", "rating"]
